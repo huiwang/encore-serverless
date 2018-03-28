@@ -17,6 +17,9 @@ public class RecommendationHandler implements RequestHandler<Site, ApiGatewayRes
     public ApiGatewayResponse handleRequest(Site site, Context context) {
         BasicConfigurator.configure();
 
+        String tableName = System.getenv("DYNAMODB_TABLE");
+
+        LOG.info("table " + " " + tableName);
         LOG.info("received " + " " + site);
         List<Recommendation> result = Collections.singletonList(new Recommendation("https://hui-wang.info/hello.html", Collections.singletonList(new Link("title", "https://hui-wnag.info/world.html"))));
         return ApiGatewayResponse.builder()
