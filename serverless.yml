@@ -20,8 +20,8 @@ package:
   artifact: target/encore-dev.jar
 
 functions:
-  hello:
-    handler: com.truelaurel.recommend.Handler
+  recommend:
+    handler: com.truelaurel.recommend.RecommendationHandler
     events:
       - http:
           path: recommend
