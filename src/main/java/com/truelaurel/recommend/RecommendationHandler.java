@@ -2,8 +2,8 @@ package com.truelaurel.recommend;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
@@ -11,11 +11,10 @@ import java.util.stream.Collectors;
 
 public class RecommendationHandler implements RequestHandler<Site, ApiGatewayResponse> {
 
-    private static final Logger LOG = Logger.getLogger(RecommendationHandler.class);
+    private static final Logger LOG = LogManager.getLogger(RecommendationHandler.class);
 
     @Override
     public ApiGatewayResponse handleRequest(Site site, Context context) {
-        BasicConfigurator.configure();
 
         String tableName = System.getenv("DYNAMODB_TABLE");
 
