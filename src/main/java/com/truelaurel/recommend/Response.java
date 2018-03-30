@@ -10,14 +10,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ApiGatewayResponse {
+public class Response {
 
 	private final int statusCode;
 	private final String body;
 	private final Map<String, String> headers;
 	private final boolean isBase64Encoded;
 
-	public ApiGatewayResponse(int statusCode, String body, Map<String, String> headers, boolean isBase64Encoded) {
+	public Response(int statusCode, String body, Map<String, String> headers, boolean isBase64Encoded) {
 		this.statusCode = statusCode;
 		this.body = body;
 		this.headers = headers;
@@ -47,7 +47,7 @@ public class ApiGatewayResponse {
 
 	public static class Builder {
 
-		private static final Logger LOG = LogManager.getLogger(ApiGatewayResponse.Builder.class);
+		private static final Logger LOG = LogManager.getLogger(Response.Builder.class);
 
 		private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -69,7 +69,7 @@ public class ApiGatewayResponse {
 		}
 
 		/**
-		 * Builds the {@link ApiGatewayResponse} using the passed raw body string.
+		 * Builds the {@link Response} using the passed raw body string.
 		 */
 		public Builder setRawBody(String rawBody) {
 			this.rawBody = rawBody;
@@ -77,7 +77,7 @@ public class ApiGatewayResponse {
 		}
 
 		/**
-		 * Builds the {@link ApiGatewayResponse} using the passed object body
+		 * Builds the {@link Response} using the passed object body
 		 * converted to JSON.
 		 */
 		public Builder setObjectBody(Object objectBody) {
@@ -86,7 +86,7 @@ public class ApiGatewayResponse {
 		}
 
 		/**
-		 * Builds the {@link ApiGatewayResponse} using the passed binary body
+		 * Builds the {@link Response} using the passed binary body
 		 * encoded as base64. {@link #setBase64Encoded(boolean)
 		 * setBase64Encoded(true)} will be in invoked automatically.
 		 */
@@ -109,7 +109,7 @@ public class ApiGatewayResponse {
 			return this;
 		}
 
-		public ApiGatewayResponse build() {
+		public Response build() {
 			String body = null;
 			if (rawBody != null) {
 				body = rawBody;
@@ -123,7 +123,7 @@ public class ApiGatewayResponse {
 			} else if (binaryBody != null) {
 				body = new String(Base64.getEncoder().encode(binaryBody), StandardCharsets.UTF_8);
 			}
-			return new ApiGatewayResponse(statusCode, body, headers, base64Encoded);
+			return new Response(statusCode, body, headers, base64Encoded);
 		}
 	}
 }
