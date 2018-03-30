@@ -2,38 +2,61 @@ package com.truelaurel.recommend;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import software.amazon.awssdk.http.HttpStatusCodes;
 import software.amazon.awssdk.services.dynamodb.DynamoDBClient;
 import software.amazon.awssdk.services.dynamodb.datamodeling.DynamoDbMapper;
 import software.amazon.awssdk.services.dynamodb.datamodeling.DynamoDbScanExpression;
-import software.amazon.awssdk.services.dynamodb.datamodeling.PaginatedScanList;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ComparisonOperator;
 import software.amazon.awssdk.services.dynamodb.model.Condition;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Handler implements RequestHandler<Request, Response> {
+public class Handler implements RequestHandler<Map<String, Object>, Response> {
 
     private static final Logger LOG = LogManager.getLogger(Handler.class);
 
     @Override
-    public Response handleRequest(Request request, Context context) {
-        LOG.info("received request " + request);
-        if (request.getInternal() < 1) {
-            throw new IllegalArgumentException("internal link must be greater or equal to 1. internal=" + request.getInternal());
+    public Response handleRequest(Map<String, Object> input, Context context) {
+        try {
+            LOG.info("received input " + input);
+            return Response.builder()
+                    .setStatusCode(HttpStatusCodes.OK)
+                    .setObjectBody(doHandleRequest(input))
+                    .build();
+        } catch (Exception e) {
+            LOG.error("Unable to handle recommendation request", e);
+            return Response.builder()
+                    .setStatusCode(HttpStatusCodes.INTERNAL_SERVER_ERROR)
+                    .setObjectBody(e.getMessage())
+                    .build();
         }
-        if (request.getExternal() < 0) {
-            throw new IllegalArgumentException("external link must be positive. external=" + request.getExternal());
-        }
-        Site site = request.getSite();
+    }
+
+    private Map<String, List<Link>> doHandleRequest(Map<String, Object> input) throws IOException {
+        Request request = readRequest(input);
+        Validator.validateRequest(request);
+
         DynamoDBClient client = DynamoDBClient.create();
         DynamoDbMapper dynamoDbMapper = new DynamoDbMapper(client);
-        dynamoDbMapper.save(site);
 
+        Site site = request.getSite();
+        dynamoDbMapper.save(site);
+        List<Site> sites = loadExternalSites(site, dynamoDbMapper);
+
+        Engine engine = new Engine(site, sites);
+
+        Map<Post, List<Post>> postMap = engine.recommend(request.getInternal(), request.getExternal());
+        return convertToResult(postMap);
+    }
+
+    private List<Site> loadExternalSites(Site site, DynamoDbMapper dynamoDbMapper) {
         DynamoDbScanExpression scanExpression = new DynamoDbScanExpression();
         scanExpression.addFilterCondition("domain",
                 Condition.builder()
@@ -41,22 +64,21 @@ public class Handler implements RequestHandler<Request, Response> {
                         .comparisonOperator(ComparisonOperator.NE)
                         .build());
 
-        PaginatedScanList<Site> sites = dynamoDbMapper.scan(Site.class, scanExpression);
+        return dynamoDbMapper.scan(Site.class, scanExpression);
+    }
 
-        Engine engine = new Engine(site, sites);
-
-        Map<Post, List<Post>> postMap = engine.recommend(request.getInternal(), request.getExternal());
-        Map<String, List<Link>> result = convertToResult(postMap);
-        return Response.builder()
-                .setStatusCode(200)
-                .setObjectBody(result)
-                .build();
+    private Request readRequest(Map<String, Object> input) throws IOException {
+        Object body = input.get("body");
+        if (!(body instanceof String)) {
+            throw new IllegalArgumentException("No body found in the input body=" + body);
+        }
+        return new ObjectMapper().readValue((String) body, Request.class);
     }
 
     private Map<String, List<Link>> convertToResult(Map<Post, List<Post>> postMap) {
         return postMap.entrySet().stream().collect(Collectors.toMap(
-                    e -> e.getKey().getPermalink(),
-                    e -> e.getValue().stream().map(p -> new Link(p.getTitle(), p.getPermalink())).collect(Collectors.toList())));
+                e -> e.getKey().getPermalink(),
+                e -> e.getValue().stream().map(p -> new Link(p.getTitle(), p.getPermalink())).collect(Collectors.toList())));
     }
 
 }
