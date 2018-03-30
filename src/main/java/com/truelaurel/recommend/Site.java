@@ -1,8 +1,14 @@
 package com.truelaurel.recommend;
 
+import software.amazon.awssdk.services.dynamodb.datamodeling.DynamoDbHashKey;
+import software.amazon.awssdk.services.dynamodb.datamodeling.DynamoDbTable;
+
 import java.util.List;
 
+@DynamoDbTable(tableName = "encore-recommendation-service-site")
 public class Site {
+
+    @DynamoDbHashKey
     private String domain;
     private List<Post> posts;
 

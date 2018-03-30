@@ -1,7 +1,10 @@
 package com.truelaurel.recommend;
 
+import software.amazon.awssdk.services.dynamodb.datamodeling.DynamoDbDocument;
+
 import java.util.List;
 
+@DynamoDbDocument
 public class Post {
     private String title;
     private String permalink;

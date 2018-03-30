@@ -4,6 +4,8 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import software.amazon.awssdk.services.dynamodb.DynamoDBClient;
+import software.amazon.awssdk.services.dynamodb.datamodeling.DynamoDbMapper;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,10 +18,12 @@ public class RecommendationHandler implements RequestHandler<Site, ApiGatewayRes
     @Override
     public ApiGatewayResponse handleRequest(Site site, Context context) {
 
-        String tableName = System.getenv("DYNAMODB_TABLE");
-
-        LOG.info("table " + " " + tableName);
+        DynamoDBClient client = DynamoDBClient.create();
+        DynamoDbMapper dynamoDbMapper = new DynamoDbMapper(client);
+        dynamoDbMapper.save(site);
         LOG.info("received " + " " + site);
+        LOG.info("read from db " + " " + dynamoDbMapper.load(Site.class, site.getDomain()));
+
         List<Recommendation> result = Collections.singletonList(new Recommendation("https://hui-wang.info/hello.html", Collections.singletonList(new Link("title", "https://hui-wnag.info/world.html"))));
         return ApiGatewayResponse.builder()
                 .setStatusCode(200)

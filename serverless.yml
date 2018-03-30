@@ -4,7 +4,7 @@ provider:
   name: aws
   runtime: java8
   environment:
-    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    DYNAMODB_TABLE: ${self:service}-site
   iamRoleStatements:
     - Effect: Allow
       Action:
