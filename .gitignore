@@ -16,3 +16,6 @@ target
 # Idea
 *.iml
 .idea
+
+# maven shade pluin
+dependency-reduced-pom.xml
