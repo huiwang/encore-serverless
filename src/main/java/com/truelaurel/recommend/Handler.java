@@ -12,19 +12,23 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ComparisonOperator;
 import software.amazon.awssdk.services.dynamodb.model.Condition;
 
-import java.util.Collections;
-
 public class Handler implements RequestHandler<Request, Response> {
 
     private static final Logger LOG = LogManager.getLogger(Handler.class);
 
     @Override
     public Response handleRequest(Request request, Context context) {
+        LOG.info("received request " + request);
+        if (request.getInternal() < 1) {
+            throw new IllegalArgumentException("internal link must be greater or equal to 1. internal=" + request.getInternal());
+        }
+        if (request.getExternal() < 0) {
+            throw new IllegalArgumentException("external link must be positive. external=" + request.getExternal());
+        }
         Site site = request.getSite();
         DynamoDBClient client = DynamoDBClient.create();
         DynamoDbMapper dynamoDbMapper = new DynamoDbMapper(client);
         dynamoDbMapper.save(site);
-        LOG.info("received " + " " + site);
 
         DynamoDbScanExpression scanExpression = new DynamoDbScanExpression();
         scanExpression.addFilterCondition("domain",
@@ -40,7 +44,6 @@ public class Handler implements RequestHandler<Request, Response> {
         return Response.builder()
                 .setStatusCode(200)
                 .setObjectBody(engine.recommend(request.getInternal(), request.getExternal()))
-                .setHeaders(Collections.singletonMap("X-Powered-By", "AWS Lambda & serverless"))
                 .build();
     }
 
