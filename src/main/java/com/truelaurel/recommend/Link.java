@@ -4,6 +4,9 @@ public class Link {
     private String title;
     private String permalink;
 
+    public Link() {
+    }
+
     public Link(String title, String permalink) {
         this.title = title;
         this.permalink = permalink;

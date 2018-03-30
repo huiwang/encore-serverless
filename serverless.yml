@@ -21,7 +21,7 @@ package:
 
 functions:
   recommend:
-    handler: com.truelaurel.recommend.RecommendationHandler
+    handler: com.truelaurel.recommend.Handler
     events:
       - http:
           path: recommend

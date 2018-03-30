@@ -12,6 +12,9 @@ public class Site {
     private String domain;
     private List<Post> posts;
 
+    public Site() {
+    }
+
     public Site(String domain, List<Post> posts) {
         this.domain = domain;
         this.posts = posts;

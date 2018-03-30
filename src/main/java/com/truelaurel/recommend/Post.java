@@ -11,6 +11,9 @@ public class Post {
     private String permalink;
     private List<String> tags;
 
+    public Post() {
+    }
+
     public Post(String title, String permalink, List<String> tags) {
         this.title = title;
         this.permalink = permalink;

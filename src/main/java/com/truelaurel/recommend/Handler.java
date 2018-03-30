@@ -12,6 +12,10 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ComparisonOperator;
 import software.amazon.awssdk.services.dynamodb.model.Condition;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class Handler implements RequestHandler<Request, Response> {
 
     private static final Logger LOG = LogManager.getLogger(Handler.class);
@@ -41,10 +45,18 @@ public class Handler implements RequestHandler<Request, Response> {
 
         Engine engine = new Engine(site, sites);
 
+        Map<Post, List<Post>> postMap = engine.recommend(request.getInternal(), request.getExternal());
+        Map<String, List<Link>> result = convertToResult(postMap);
         return Response.builder()
                 .setStatusCode(200)
-                .setObjectBody(engine.recommend(request.getInternal(), request.getExternal()))
+                .setObjectBody(result)
                 .build();
+    }
+
+    private Map<String, List<Link>> convertToResult(Map<Post, List<Post>> postMap) {
+        return postMap.entrySet().stream().collect(Collectors.toMap(
+                    e -> e.getKey().getPermalink(),
+                    e -> e.getValue().stream().map(p -> new Link(p.getTitle(), p.getPermalink())).collect(Collectors.toList())));
     }
 
 }

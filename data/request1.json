@@ -1,0 +1,25 @@
+{
+  "internal": 1,
+  "external": 1,
+  "site": {
+    "domain": "hui-wang.info",
+    "posts": [
+      {
+        "title": "hello france",
+        "permalink": "http://hui-wang.info/hello-france.html",
+        "tags": [
+          "hello",
+          "france"
+        ]
+      },
+      {
+        "title": "hello world",
+        "permalink": "http://hui-wang.info/hello-world.html",
+        "tags": [
+          "hello",
+          "world"
+        ]
+      }
+    ]
+  }
+}

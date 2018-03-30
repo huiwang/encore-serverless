@@ -1,0 +1,25 @@
+{
+  "internal": 1,
+  "external": 1,
+  "site": {
+    "domain": "ming-li.info",
+    "posts": [
+      {
+        "title": "hello paris",
+        "permalink": "http://ming-li.info/hello-paris.html",
+        "tags": [
+          "hello",
+          "paris"
+        ]
+      },
+      {
+        "title": "goodbye london",
+        "permalink": "http://ming-li.info/goodbye-london.html",
+        "tags": [
+          "goodbye",
+          "london"
+        ]
+      }
+    ]
+  }
+}
