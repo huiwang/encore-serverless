@@ -1,10 +1,10 @@
-service: encore-recommendation-service
+service: encore
 
 provider:
   name: aws
   runtime: java8
   environment:
-    DYNAMODB_TABLE: ${self:service}-site
+    DYNAMODB_TABLE: ${self:service}-${self:provider.stage}-site
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -17,22 +17,22 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 package:
-  artifact: target/encore-dev.jar
+  artifact: target/encore-1.0.0.jar
 
 functions:
   recommend:
     handler: com.truelaurel.recommend.Handler
     events:
       - http:
-          path: recommend
+          path: recommendation
           method: post
           cors: true
 
 resources:
   Resources:
-    TodosDynamoDbTable:
+    EncoreDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
+      DeletionPolicy: Delete
       Properties:
         AttributeDefinitions:
           -
@@ -46,4 +46,5 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
+
 
