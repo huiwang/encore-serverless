@@ -1,0 +1,10 @@
+{
+  "name": "encore-recommendation-service",
+  "version": "1.0.0",
+  "description": "Inter-blog post recommendation service",
+  "author": "hwang",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-domain-manager": "^2.3.6"
+  }
+}

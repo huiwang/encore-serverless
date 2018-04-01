@@ -5,7 +5,7 @@ import software.amazon.awssdk.services.dynamodb.datamodeling.DynamoDbTable;
 
 import java.util.List;
 
-@DynamoDbTable(tableName = "encore-dev-site")
+@DynamoDbTable(tableName = "encore-prod-site")
 public class Site {
 
     @DynamoDbHashKey

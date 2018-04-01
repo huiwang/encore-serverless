@@ -2,6 +2,7 @@ service: encore
 
 provider:
   name: aws
+  stage: ${opt:stage, 'prod'}
   runtime: java8
   environment:
     DYNAMODB_TABLE: ${self:service}-${self:provider.stage}-site
@@ -30,7 +31,7 @@ functions:
 
 resources:
   Resources:
-    EncoreDynamoDbTable:
+    EncoreProdDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Delete
       Properties:
@@ -47,4 +48,13 @@ resources:
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
 
+plugins:
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: api.truelaurel.com
+    basePath: ''
+    stage: prod
+    createRoute53Record: true
 
