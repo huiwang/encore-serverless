@@ -48,13 +48,4 @@ resources:
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
 
-plugins:
-  - serverless-domain-manager
-
-custom:
-  customDomain:
-    domainName: api.truelaurel.com
-    basePath: ''
-    stage: prod
-    createRoute53Record: true
 
