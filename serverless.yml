@@ -22,6 +22,7 @@ package:
 
 functions:
   recommend:
+    timeout: 60
     handler: com.truelaurel.recommend.Handler
     events:
       - http:
