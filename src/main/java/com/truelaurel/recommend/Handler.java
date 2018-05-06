@@ -46,13 +46,19 @@ public class Handler implements RequestHandler<Map<String, Object>, Response> {
         DynamoDBClient client = DynamoDBClient.create();
         DynamoDbMapper dynamoDbMapper = new DynamoDbMapper(client);
 
+        LOG.info("Start save current site");
         Site site = request.getSite();
         dynamoDbMapper.save(site);
+        LOG.info("End save current site");
+
+        LOG.info("Start load all sites");
         List<Site> sites = loadExternalSites(site, dynamoDbMapper);
+        LOG.info("End load all sites");
 
         Engine engine = new Engine(site, sites);
-
+        LOG.info("Start recommend");
         Map<Post, List<Post>> postMap = engine.recommend(request.getInternal(), request.getExternal());
+        LOG.info("End recommend");
         return convertToResult(postMap);
     }
 
