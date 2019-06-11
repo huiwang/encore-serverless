@@ -59,9 +59,17 @@ public class Engine {
     private List<Post> pickPosts(List<Post> from, int size) {
         return from
                 .stream()
-                .sorted(Comparator.comparing(Post::getUpdated).reversed())
+                .sorted(Comparator.comparing(Engine::getUpdated).reversed())
                 .limit(size)
                 .collect(Collectors.toList());
+    }
+
+    private static String getUpdated(Post post) {
+        if (post.getUpdated() == null) {
+            return "1970";
+        } else {
+            return post.getUpdated();
+        }
     }
 
 }
