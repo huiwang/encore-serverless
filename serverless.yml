@@ -18,7 +18,7 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 package:
-  artifact: target/encore-1.0.0.jar
+  artifact: target/encore-1.1.0.jar
 
 functions:
   recommend:

@@ -10,6 +10,7 @@ public class Post {
     private String title;
     private String permalink;
     private List<String> tags;
+    private String updated;
 
     public Post() {
     }
@@ -44,18 +45,28 @@ public class Post {
         this.tags = tags;
     }
 
+    public String getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(String updated) {
+        this.updated = updated;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
-        return Objects.equals(permalink, post.permalink);
+        return Objects.equals(title, post.title) &&
+                Objects.equals(permalink, post.permalink) &&
+                Objects.equals(tags, post.tags) &&
+                Objects.equals(updated, post.updated);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(permalink);
+        return Objects.hash(title, permalink, tags, updated);
     }
 
     @Override
@@ -64,6 +75,7 @@ public class Post {
                 "title='" + title + '\'' +
                 ", permalink='" + permalink + '\'' +
                 ", tags=" + tags +
+                ", updated='" + updated + '\'' +
                 '}';
     }
 }
