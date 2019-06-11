@@ -19,3 +19,6 @@ target
 
 # maven shade pluin
 dependency-reduced-pom.xml
+
+# Node
+node_modules
