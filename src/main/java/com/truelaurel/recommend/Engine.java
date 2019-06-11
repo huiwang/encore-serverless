@@ -1,9 +1,6 @@
 package com.truelaurel.recommend;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Engine {
@@ -53,10 +50,18 @@ public class Engine {
         for (Map.Entry<Post, List<Post>> entry : result.entrySet()) {
             Post post = entry.getKey();
             List<Post> posts = entry.getValue();
-            posts.addAll(internalPostMap.getOrDefault(post, new ArrayList<>()).stream().limit(internal).collect(Collectors.toList()));
-            posts.addAll(externalPostMap.getOrDefault(post, new ArrayList<>()).stream().limit(external).collect(Collectors.toList()));
+            posts.addAll(pickPosts(internalPostMap.getOrDefault(post, new ArrayList<>()), internal));
+            posts.addAll(pickPosts(externalPostMap.getOrDefault(post, new ArrayList<>()), external));
         }
         return result;
+    }
+
+    private List<Post> pickPosts(List<Post> from, int size) {
+        return from
+                .stream()
+                .sorted(Comparator.comparing(Post::getUpdated).reversed())
+                .limit(size)
+                .collect(Collectors.toList());
     }
 
 }

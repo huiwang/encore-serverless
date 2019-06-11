@@ -15,10 +15,11 @@ public class Post {
     public Post() {
     }
 
-    public Post(String title, String permalink, List<String> tags) {
+    public Post(String title, String permalink, List<String> tags, String updated) {
         this.title = title;
         this.permalink = permalink;
         this.tags = tags;
+        this.updated = updated;
     }
 
     public String getTitle() {
