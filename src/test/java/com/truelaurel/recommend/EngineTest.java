@@ -14,7 +14,7 @@ public class EngineTest {
     private Post post11 = new Post("hello world", "http://hui-wang.info/hello-world.html", Arrays.asList("hello", "world"), "time1");
     private Post post12 = new Post("hello france", "http://hui-wang.info/hello-france.html", Arrays.asList("hello", "france"), "time2");
     private Site site1 = new Site("hui-wang.info", Arrays.asList(post11, post12));
-    private Post post21 = new Post("hello paris", "http://li-ming.info/hello-paris.html", Arrays.asList("hello", "paris"), "time1");
+    private Post post21 = new Post("hello paris", "http://li-ming.info/hello-paris.html", Arrays.asList("hello", "paris", "world"), "time1");
     private Post post22 = new Post("goodbye london", "http://li-ming.info/goodbye-london.html", Arrays.asList("goodbye", "london"), "time2");
     private Site site2 = new Site("ming-li.info", Arrays.asList(post21, post22));
 
@@ -25,7 +25,7 @@ public class EngineTest {
         result.put(post11, Arrays.asList(post12, post21));
         result.put(post12, Arrays.asList(post11, post21));
 
-        Assert.assertEquals(result, engine.recommend(1, 1));
+        Assert.assertEquals(result, engine.recommend(1, 2));
     }
 
     @Test
