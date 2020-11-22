@@ -5,6 +5,7 @@
   "author": "hwang",
   "license": "MIT",
   "devDependencies": {
-    "serverless-domain-manager": "^2.3.6"
+    "serverless-domain-manager": "^2.3.6",
+    "serverless-dynamodb-ttl": "^0.1.1"
   }
 }
