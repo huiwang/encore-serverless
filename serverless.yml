@@ -2,6 +2,7 @@ service: encore
 
 provider:
   name: aws
+  profile: perso
   stage: ${opt:stage, 'prod'}
   runtime: java8
   environment:
